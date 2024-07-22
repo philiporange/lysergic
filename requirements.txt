@@ -1,0 +1,2 @@
+tqdm>=4.0.0
+magika>=0.1.0; extra == 'magika'
