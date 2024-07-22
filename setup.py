@@ -1,11 +1,12 @@
 from setuptools import setup, find_packages
+from . import __program__, __version__
 
 with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
 
 setup(
-    name="lysergic",
-    version="0.1.0",
+    name=__program__,
+    version=__version__,
     author="Philip Orange",
     author_email="git@philiporange.com",
     description="A directory scanning tool",
@@ -34,7 +35,7 @@ setup(
     },
     entry_points={
         "console_scripts": [
-            "lsd=lsd:main",
+            "lsd=lysergic.lsd:main",
         ],
     },
 )
