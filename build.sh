@@ -2,6 +2,7 @@
 
 # Paths
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+MODULE_DIR="$DIR/$(basename $DIR)"
 
 BLACK=black
 BLACK_OPTS="--line-length 79"
@@ -17,11 +18,11 @@ fi
 
 # Run black
 echo "Running black"
-$BLACK $BLACK_OPTS $DIR/*.py
+$BLACK $BLACK_OPTS $MODULE_DIR/*.py
 
 # Run linter
 echo "Running linter"
-$LINTER $DIR/*.py
+$LINTER $MODULE_DIR/*.py
 if [ $? -ne 0 ]; then
     echo "Linting failed"
     exit 1
@@ -30,7 +31,7 @@ echo "Linting passed"
 
 # Run tests
 echo "Running tests"
-python3 -m unittest discover -s $DIR
+python3 -m unittest discover -s $MODULE_DIR
 if [ $? -ne 0 ]; then
     echo "Tests failed"
     exit 1
