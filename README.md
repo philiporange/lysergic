@@ -48,7 +48,7 @@ This command will scan the `/home/user/documents` directory, include metadata, u
 You can also use Lysergic as a Python module in your scripts:
 
 ```python
-from lysergic import LSD
+from lsd import LSD
 
 # Initialize LSD
 lsd = LSD("/path/to/directory", include_metadata=True, num_threads=4, use_magika=True)

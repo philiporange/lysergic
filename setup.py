@@ -1,5 +1,5 @@
-from setuptools import setup, find_packages
-from . import __program__, __version__
+from setuptools import setup
+from __init__ import __program__, __version__
 
 with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
@@ -13,7 +13,7 @@ setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/philiporange/lysergic",
-    packages=find_packages(),
+    py_modules=["lysergic"],
     classifiers=[
         "Development Status :: 3 - Alpha",
         "Intended Audience :: Developers",
@@ -35,7 +35,7 @@ setup(
     },
     entry_points={
         "console_scripts": [
-            "lsd=lysergic.lsd:main",
+            "lsd=lysergic.lysergic:main",
         ],
     },
 )

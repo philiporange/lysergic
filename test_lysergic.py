@@ -5,7 +5,7 @@ import shutil
 import random
 import json
 
-from lsd import LSD
+from lysergic import LSD
 
 
 def create_complex_test_directory(
