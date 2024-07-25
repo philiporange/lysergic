@@ -24,6 +24,7 @@ class LSD:
         use_magika: bool = False,
         show_progress: bool = True,
         salt: str = "",
+        disable_hashing: bool = False,
     ):
         self.directory = directory
         self.include_metadata = include_metadata
@@ -35,6 +36,7 @@ class LSD:
         self.output_to_file = (
             False  # New attribute to track output destination
         )
+        self.disable_hashing = disable_hashing
 
         if self.use_magika:
             try:
@@ -53,29 +55,31 @@ class LSD:
         _, extension = os.path.splitext(file_path)
         extension = extension.lstrip(".").lower()
 
-        md5 = hashlib.md5(self.salt.encode())
-        sha1 = hashlib.sha1(self.salt.encode())
-        sha256 = hashlib.sha256(self.salt.encode())
-
-        with open(abs_path, "rb") as f:
-            while True:
-                chunk = f.read(self.BUFFER_SIZE)
-                if not chunk:
-                    break
-                md5.update(chunk)
-                sha1.update(chunk)
-                sha256.update(chunk)
-
         result = {
             "relative_path": file_path,
             "size": file_size,
             "extension": extension,
-            "hashes": {
+        }
+
+        if not self.disable_hashing:
+            md5 = hashlib.md5(self.salt.encode())
+            sha1 = hashlib.sha1(self.salt.encode())
+            sha256 = hashlib.sha256(self.salt.encode())
+
+            with open(abs_path, "rb") as f:
+                while True:
+                    chunk = f.read(self.BUFFER_SIZE)
+                    if not chunk:
+                        break
+                    md5.update(chunk)
+                    sha1.update(chunk)
+                    sha256.update(chunk)
+
+            result["hashes"] = {
                 "md5": md5.hexdigest(),
                 "sha1": sha1.hexdigest(),
                 "sha256": sha256.hexdigest(),
-            },
-        }
+            }
 
         if self.magika:
             magika_result = self.magika.identify_path(Path(abs_path))
@@ -255,6 +259,11 @@ def main():
         default="",
         help="Salt to prepend to file contents before hashing",
     )
+    parser.add_argument(
+        "--disable-hashing",
+        action="store_true",
+        help="Disable file hashing",
+    )
     args = parser.parse_args()
 
     lsd = LSD(
@@ -264,6 +273,7 @@ def main():
         args.magika,
         not args.no_progress,
         args.salt,
+        args.disable_hashing,
     )
 
     if args.eta:
