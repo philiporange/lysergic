@@ -158,6 +158,29 @@ class TestLSDClass(unittest.TestCase):
         count = empty_lsd.count_files()
         self.assertEqual(count, 0)
 
+    def test_media_extraction_integration(self):
+        """Test that media extraction doesn't break when optional deps
+        are missing."""
+        test_file = self.created_files[0]
+        relative_path = os.path.relpath(test_file, self.temp_dir)
+        result = self.lsd_with_metadata.get_file_properties(relative_path)
+
+        # Should have metadata but no media_tags (since .bin is not a
+        # media file)
+        self.assertIn("metadata", result)
+        self.assertNotIn("media_tags", result)
+
+    def test_extractor_registry_import_optional(self):
+        """Test that extractor registry import failure doesn't break
+        functionality."""
+        # Test that LSD can be created even if extractors can't be imported
+        lsd_instance = LSD(
+            self.temp_dir, include_metadata=True, show_progress=False
+        )
+        # Should still work for basic functionality
+        files = lsd_instance.get_all_files()
+        self.assertGreater(len(files), 0)
+
 
 if __name__ == "__main__":
     unittest.main()

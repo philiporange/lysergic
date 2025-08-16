@@ -31,6 +31,9 @@ setup(
     ],
     extras_require={
         "magika": ["magika"],
+        "media": ["mutagen"],              # audio + mp4/m4a/m4b
+        "video": ["pymediainfo"],          # mkv + richer video info
+        "ebooks": ["ebooklib"],            # epub
         "dev": ["black", "flake8"],
     },
     entry_points={

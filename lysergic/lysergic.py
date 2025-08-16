@@ -11,6 +11,12 @@ from pathlib import Path
 
 from tqdm import tqdm
 
+try:
+    # Optional: local extractor registry (import may fail if file not present)
+    from .extractors import build_default_registry
+except Exception:
+    build_default_registry = None
+
 
 class LSD:
     BUFFER_SIZE = 1024 * 1024
@@ -37,6 +43,7 @@ class LSD:
             False  # New attribute to track output destination
         )
         self.disable_hashing = disable_hashing
+        self._registry = None  # lazy-initialized extractor registry
 
         if self.use_magika:
             try:
@@ -91,6 +98,9 @@ class LSD:
                 "magic": magika_result.output.magic,
                 "description": magika_result.output.description,
             }
+            mime_hint = magika_result.output.mime_type
+        else:
+            mime_hint = None
 
         if self.include_metadata:
             stat = os.stat(abs_path)
@@ -102,6 +112,25 @@ class LSD:
                 "group": stat.st_gid,
                 "permissions": oct(stat.st_mode)[-3:],
             }
+
+            # Embedded media tags (opt-in via --metadata).
+            # Only attempt if the registry exists/is importable.
+            if build_default_registry and self._registry is None:
+                try:
+                    self._registry = build_default_registry()
+                except Exception:
+                    self._registry = None
+
+            if self._registry:
+                try:
+                    media = self._registry.extract(
+                        Path(abs_path), extension, mime_hint
+                    )
+                    if media:
+                        result["media_tags"] = media
+                except Exception:
+                    # Swallow extractor errors to keep scanning robust
+                    pass
 
         return result
 
@@ -233,7 +262,11 @@ def main():
         help="Compress output with gzip",
     )
     parser.add_argument(
-        "-m", "--metadata", action="store_true", help="Include file metadata"
+        "-m",
+        "--metadata",
+        action="store_true",
+        help="Include filesystem metadata and (if optional deps are "
+        "installed) embedded media tags",
     )
     parser.add_argument(
         "-t",

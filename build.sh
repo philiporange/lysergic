@@ -6,7 +6,7 @@ MODULE_DIR="$DIR/$(basename $DIR)"
 
 BLACK=black
 BLACK_OPTS="--line-length 79"
-LINTER=/usr/bin/flake8
+LINTER=$(which flake8)
 GITIGNORE_URL="https://raw.githubusercontent.com/github/gitignore/main/Python.gitignore"
 
 # Update .gitignore if older than 30 days
@@ -22,12 +22,16 @@ $BLACK $BLACK_OPTS $MODULE_DIR/*.py
 
 # Run linter
 echo "Running linter"
-$LINTER $MODULE_DIR/*.py
-if [ $? -ne 0 ]; then
-    echo "Linting failed"
-    exit 1
+if [ -n "$LINTER" ]; then
+    $LINTER $MODULE_DIR/*.py
+    if [ $? -ne 0 ]; then
+        echo "Linting failed"
+        exit 1
+    fi
+    echo "Linting passed"
+else
+    echo "flake8 not found, skipping linting"
 fi
-echo "Linting passed"
 
 # Run tests
 echo "Running tests"
