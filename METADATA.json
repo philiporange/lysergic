@@ -1,0 +1,63 @@
+{
+  "name": "lysergic",
+  "short_description": "A directory scanning tool for analyzing filesystems, computing file hashes, and extracting metadata with multi-threading and optional Magika support.",
+  "long_description": "Lysergic is a Python-based directory scanning and file analysis tool that enables rapid filesystem analysis with support for computing file hashes (MD5, SHA1, SHA256), extracting filesystem metadata, and optional embedded media tag extraction. It features multi-threaded processing for improved performance, optional Magika integration for advanced file type detection, and pluggable metadata extractors for various media formats including audio (MP3, FLAC, OGG, APE, WAV, M4A), video (MKV, MP4, MOV), and ebooks (EPUB). The tool can be used both as a command-line utility (lsd) and as a Python module, outputting results in JSONL format with optional gzip compression.",
+  "keywords": [
+    "directory-scanning",
+    "file-analysis",
+    "filesystem-metadata",
+    "file-hashing",
+    "hash-computation",
+    "md5",
+    "sha1",
+    "sha256",
+    "multithreading",
+    "media-metadata",
+    "audio-metadata",
+    "video-metadata",
+    "magika-integration",
+    "file-type-detection",
+    "cli-tool",
+    "python-library",
+    "jsonl-output"
+  ],
+  "primary_language": "Python",
+  "languages": [
+    "Python"
+  ],
+  "frameworks": [
+    "tqdm"
+  ],
+  "modules": [
+    {
+      "path": "lysergic/__init__.py",
+      "description": "Package initialization exposing the LSD class and version information."
+    },
+    {
+      "path": "lysergic/lysergic.py",
+      "description": "Main LSD (Directory Scanner) class providing directory scanning, file property extraction, hashing, metadata collection, multi-threaded processing, and command-line interface."
+    },
+    {
+      "path": "lysergic/extractors.py",
+      "description": "Pluggable metadata extractor system with implementations for audio (Mutagen), video (MediaInfo), and ebook (EPUB) formats with graceful degradation for optional dependencies."
+    },
+    {
+      "path": "lysergic/test_lysergic.py",
+      "description": "Comprehensive unit tests covering file property extraction, hashing, metadata inclusion, directory traversal, time estimation, and optional dependency handling."
+    }
+  ],
+  "git": {
+    "is_repo": true,
+    "remote_url": "https://github.com/philiporange/lysergic.git",
+    "github_name": "philiporange/lysergic",
+    "default_branch": "main",
+    "last_commit": "2025-08-16T13:40:26+01:00"
+  },
+  "stats": {
+    "files": 11,
+    "lines_of_code": 1192,
+    "size_bytes": 72158
+  },
+  "generated_at": "2025-12-06T22:17:02.904643",
+  "generator_version": "1.0.0"
+}
